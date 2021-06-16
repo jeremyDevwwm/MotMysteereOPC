@@ -55,7 +55,7 @@ void answerCheck(string response){
 void gameplay(){
     
     if(soloGame || rematch==1){
-        ifstream file("/Users/agrume/Documents/learninCPP/TP_Mot_Mystere/TP_Mot_Mystere/component/dico.txt");
+        ifstream file("/TP_Mot_Mystere/component/dico.txt");
         if(file){
             
             vector<string> fetchedFile;
