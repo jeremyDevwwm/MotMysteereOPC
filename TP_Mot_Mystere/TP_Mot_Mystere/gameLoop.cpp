@@ -6,23 +6,30 @@
 //
 
 #include "gameLoop.hpp"
+#include <vector>
 #include <string>
 #include <iostream>
+#include <fstream>
+#include <random>
+#include <ctime>
+#include <algorithm>
 #include "str_mix_up.hpp"
 
 using namespace std;
 
 bool game (true);
+bool soloGame(true);
 
 string response;
 string displayedWord;
 string submittedValue;
 
+
 int choice;
 int rematch;
 
-
-void gameplay(){
+void answerCheck(string response){
+    
     displayedWord = stringMixUp(response);
     bool goodAnswer(false);
     int trys(0);
@@ -42,13 +49,83 @@ void gameplay(){
             cout << "Ce n'est pas le mot !" << endl;
         }
     } while(!goodAnswer);
+}
+
+
+void gameplay(){
     
+    if(soloGame || rematch==1){
+        ifstream file("/Users/agrume/Documents/learninCPP/TP_Mot_Mystere/TP_Mot_Mystere/component/dico.txt");
+        if(file){
+            
+            vector<string> fetchedFile;
+            string fileLine;
+
+            
+            while(getline(file,fileLine)){
+                fetchedFile.push_back(fileLine);
+            }
+            shuffle(fetchedFile.begin(), fetchedFile.end(), std::default_random_engine(time(0)));
+            cout << fetchedFile[0];
+            fetchedFile[0].pop_back();
+            response = fetchedFile[0];
+            
+            answerCheck(response);
+            
+            soloGame=false;
+            
+        } else {
+            
+            cout << "Erreur lors de l'ouverture du fichier"<< endl;
+        }
+        
+    } else {
+        answerCheck(response);
+    }
 }
 
 
 void gameLoop(){
     cout << "Bienvenue dans Mot Mystère !"<< endl;
     cout << "################################" << endl;
+    cout << "Souhaitez vous jouer en solo ou en multijoueur ?"<< endl;
+    cout << "1 -  Solo "<< endl;
+    cout << "2 - Multijoueur "<< endl;
+    cin >> choice;
+    
+    if(choice== 1){
+        soloGame=true;
+        do {
+        gameplay();
+            cout << "Souhaitez vous rejouer ? " << endl;
+            cout << "1 - Oui" << endl;
+            cout << "2 - Non" << endl;
+            cin >> rematch;
+            
+            if(rematch==1){
+                gameplay();
+                cout << "Souhaitez vous rejouer ? " << endl;
+                cout << "1 - Oui" << endl;
+                cout << "2 - Non" << endl;
+                cin >> rematch;
+                
+            }
+            
+            if (rematch==2){
+                cout << "Merci d'avoir joué au mot mystère !" << endl;;
+                game = false;
+            } else {
+                cout << "Erreur lors du choix : "<< endl;
+                cout << "Souhaitez vous rejouer ? " << endl;
+                cout << "1 - Oui" << endl;
+                cout << "2 - Non" << endl;
+                cin >> rematch;
+            }
+        } while(game);
+        
+    } else if (choice == 2){
+        
+    soloGame=false;
     cout << "Joueur 1, veuillez entrer le mot mystère !" << endl;
     cin >> response;
     cout << "Validez vous votre réponse ?" << endl;
@@ -102,7 +179,13 @@ void gameLoop(){
             
         } while(game);
         
-   
+    } else {
+        cout << "Erreur lors du choix "<< endl;
+        cout << "Souhaitez vous jouer en solo ou en multijoueur ?"<< endl;
+        cout << "1 -  Solo "<< endl;
+        cout << "2 - Multijoueur "<< endl;
+        cin >> choice;
+    }
 }
 
 
