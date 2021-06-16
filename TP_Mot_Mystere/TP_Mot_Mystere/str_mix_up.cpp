@@ -7,6 +7,7 @@
 
 #include "str_mix_up.hpp"
 #include <string>
+#include <ctime>
 #include <vector>
 #include <random>
 using namespace std;
@@ -18,7 +19,7 @@ string stringMixUp(string response){
         splittedStr[i] = response[i];
     }
     
-    shuffle(splittedStr.begin(), splittedStr.end(), std::default_random_engine());
+    shuffle(splittedStr.begin(), splittedStr.end(), std::default_random_engine(time(0)));
     string finalVal(splittedStr.begin(), splittedStr.end());
     
     return finalVal;
